@@ -1,3 +1,50 @@
+<!--=========== Breadcumd Section Here ========= -->
+
+<?php ;
+    if(!isset($_SESSION["validarIngreso"])){
+      echo '<script>window.location="index.php?pagina=ingreso";</script>';
+      return;
+  } else{
+      if ($_SESSION["validarIngreso"] != "ok"){
+          echo '<script>window.location="index.php?pagina=ingreso";</script>';
+          return;
+      }
+  }
+
+?>
+<section class="breadcumd__banner">
+    <div class="container">
+        <div class="breadcumd__wrapper center">
+            <h1 class="left__content">
+                blog single
+            </h1>
+            <ul class="right__content">
+                <li>
+                    <a href="index.html">
+                        Home
+                    </a>
+                </li>
+                <li>
+                    <i class="fa-solid fa-chevron-right"></i>
+                </li>
+                <li>
+                    blog
+                </li>
+            </ul>
+        </div>
+    </div>
+</section>
+<!--=========== Breadcumd Section Here ========= -->
+<?php
+
+if (isset($_GET["id"])) {
+    $item = "id";
+    $valor = $_GET["id"];
+
+    $usuario = ControladorFormularios::ctrSeleccionarRegistros($item, $valor);
+}
+?>
+
 <div class="d-flex justify-content-center text-center">
     <form class="p-5 bg-light" method="post">
         <div class="form-group">
@@ -5,7 +52,8 @@
                 <div class="input-group-prepend">
                     <span class="input-group-text"><i class="fa-solid fa-user"></i></span>
                 </div>
-                <input type="text" class="form-control" value="<?php echo $usuario["name"]; ?>" placeholder="name" id="name" name="updateName">
+                <input type="text" class="form-control" value="<?php echo $usuario["nombre"]; ?>" placeholder="name"
+                    id="name" name="updateName">
             </div>
         </div>
         <div class="form-group">
@@ -13,7 +61,8 @@
                 <div class="input-group-prepend">
                     <span class="input-group-text"><i class="fa-solid fa-envelope"></i></span>
                 </div>
-                <input type="email" class="form-control" value="<?php echo $usuario["email"]; ?>" placeholder="Enter email" id="email" name="updateEmail">
+                <input type="email" class="form-control" value="<?php echo $usuario["email"]; ?>"
+                    placeholder="Enter email" id="email" name="updateEmail">
             </div>
         </div>
         <div class="form-group">
@@ -21,7 +70,7 @@
                 <div class="input-group-prepend">
                     <span class="input-group-text"><i class="fa-solid fa-lock"></i></span>
                 </div>
-                <input type="password" class="form-control" value="<?php echo $usuario["password"]; ?>" placeholder="Enter password" id="pwd" name="updatePassword">
+                <input type="password" class="form-control" placeholder="Enter password" id="pwd" name="updatePassword">
 
                 <input type="hidden" name="passwordActual" value="<?php echo $usuario["password"]; ?>">
 
@@ -30,34 +79,24 @@
         </div>
 
         <?php
-        require_once "controladores/formularios.controlador.php";
 
-        $usuario = array();
 
-        if ($_SERVER["REQUEST_METHOD"] == "POST") {
-            $respuesta = ControladorFormularios::ctrActualizarRegistro();
-            if ($respuesta == "ok") {
-                echo '<script>
+        $actualizar = ControladorFormularios::ctrActualizarRegistro();
+        if ($actualizar == "ok") {
+            echo '<script>
                 if (window.history.replaceState){
                     window.history.replaceState(null, null, window.location.href);
                 }
                 </script>';
 
-                echo '<div class="alert-success"> El usuario ha sido actualizado</div>
+            echo '<div class="alert-success"> El usuario ha sido actualizado</div>
                 <script>
                     setTimeout(function(){
                         window.location = "index.php?pagina=inicio";
                     }, 1600);
                 </script>';
-            }
         }
 
-        if (isset($_GET["id"])) {
-            $item = "id";
-            $valor = $_GET["id"];
-
-            $usuario = ControladorFormularios::ctrSeleccionarRegistros($item, $valor);
-        }
         ?>
 
         <div class="d-flex justify-content-center text-center">

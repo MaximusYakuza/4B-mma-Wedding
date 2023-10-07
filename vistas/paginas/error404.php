@@ -1,5 +1,0 @@
-<div class="text-center">
-    <h1>404</h1>
-    <p>Pagina No encontrada</p>
-    <a href="index.php?pagina=registro" class="btn btn-primary">Regresar</a>
-</div>

@@ -1,5 +1,4 @@
 <?php
-
 class ControladorFormularios
 {
     /*
@@ -9,7 +8,7 @@ class ControladorFormularios
     {
         if (isset($_POST["registerName"])) {
             /*return $_POST["registerName"] . "<br>" . $_POST["registerEmail"] . "<br>" .$_POST["registerPassword"] . "<br>";*/
-            $tabla = "registros_jecl";
+            $tabla = "registros_mac_wedding";
 
             $datos = array(
                 "nombre" => $_POST["registerName"],
@@ -25,12 +24,20 @@ class ControladorFormularios
      */
     static public function ctrSeleccionarRegistros($item, $valor)
     {
+        if ($item == null && $valor == null) {
+            $tabla = "registros_mac_wedding";
 
-        $tabla = "registros_jecl";
+            $respuesta = ModeloFormularios::mdlSeleccionarRegistros($tabla, null, null);
 
-        $respuesta = ModeloFormularios::mdlSeleccionarRegistros($tabla, null, null);
+            return $respuesta;
+        } else {
+            $tabla = "registros_mac_wedding";
 
-        return $respuesta;
+            $respuesta = ModeloFormularios::mdlSeleccionarRegistros($tabla, $item, $valor);
+
+            return $respuesta;
+        }
+
     }
     /**
      * Ingreso
@@ -38,19 +45,19 @@ class ControladorFormularios
     public function ctrIngreso()
     {
         if (isset($_POST["ingresoEmail"])) {
-            $tabla = "registros_jecl";
-            $item = "Email";
+            $tabla = "registros_mac_wedding";
+            $item = "email";
             $valor = $_POST["ingresoEmail"];
-        
+
             $respuesta = ModeloFormularios::mdlSeleccionarRegistros($tabla, $item, $valor);
-        
+
             if (is_array($respuesta)) {
-                if ($respuesta["Email"] == $_POST["ingresoEmail"] && $respuesta["Password"] == $_POST["ingresoPassword"]) {
-        
+                if ($respuesta["email"] == $_POST["ingresoEmail"] && $respuesta["password"] == $_POST["ingresoPassword"]) {
+
                     $_SESSION["validarIngreso"] = "ok";
-        
+
                     echo "Ingreso Exitoso";
-        
+
                     echo '<script>
                         if (window.history.replaceState){
                             window.history.replaceState(null, null, window.location.href);
@@ -76,34 +83,64 @@ class ControladorFormularios
                 echo '<div class="alert alert-danger">Error en el sistema ';
             }
         }
-        
+
     }
 
     static public function ctrActualizarRegistro()
-{
-    echo "El método ctrActualizarRegistro se está ejecutando.";
+    {
 
-    if (isset($_POST["updateName"])) {
-        if ($_POST["updatePassword"] != "") {
-            $password = $_POST["updatePassword"];
-        } else {
-            $password = $_POST["passwordActual"];
+
+        if (isset($_POST["updateName"])) {
+            if ($_POST["updatePassword"] != "") {
+                $password = $_POST["updatePassword"];
+            } else {
+                $password = $_POST["passwordActual"];
+            }
+            $tabla = "registros_mac_wedding";
+
+            $datos = array(
+                "id" => $_POST["id"],
+                "nombre" => $_POST["updateName"],
+                "email" => $_POST["updateEmail"],
+                "password" => $password
+            );
+
+            $actualizar = ModeloFormularios::mdlActualizarRegistros($tabla, $datos);
+
+            return $actualizar;
         }
-        $tabla = "registros_jecl";
 
-        $datos = array(
-            "id" => $_POST["id"],
-            "name" => $_POST["updateName"],
-            "email" => $_POST["updateEmail"],
-            "password" => $password
-        );
 
-        $respuesta = ModeloFormularios::mdlActualizarRegistros($tabla, $datos);
-
-        return $respuesta;
     }
-}
+
+    public function ctrEliminarRegistro()
+    {
+        if (isset($_POST["deleteRegistro"])) {
+
+            $tabla = "registros_mac_wedding";
+            $valor = $_POST["deleteRegistro"];
+
+
+            $respuesta = ModeloFormularios::mdlEliminarRegistro($tabla, $valor);
+
+            if ($respuesta == "ok") {
+                echo '<script>
+                if (window.history.replaceState){
+                    window.history.replaceState(null, null, window.location.href);
+                }
+                </script>    ';
+                echo '<div class="alert-success"> El usuario ha sido Eliminado</div>
+                    <script>
+                    setTimeout(function(){
+                    window.location = "index.php?pagina=inicio";
+                    },3000);
+                    </script>
+                    ';
+            }
+        }
+    }
 
 }
 
 ?>
+
